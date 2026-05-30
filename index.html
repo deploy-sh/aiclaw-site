@@ -31,899 +31,10 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"SoftwareApplication","name":"aiClaw","applicationCategory":"BusinessApplication","operatingSystem":"Linux","description":"Personal AI agent in Telegram and Max messengers. Supports any LLM: Claude, GPT-4o, Gemini, GigaChat, Ollama. Long-term memory, task scheduler, knowledge base, integrations. Deployed on client server.","url":"https://aiclaw.korfix.app","offers":{"@type":"Offer","seller":{"@type":"Organization","name":"Korfix","url":"https://korfix.ru"}},"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"aiclaw@korfix.app"}}
   </script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg0: #080b1a;
-      --bg1: #0f1128;
-      --bg2: #1d1e32;
-      --bg3: #252639;
-      --bg4: #383a61;
-      --blue: #2b70f2;
-      --blue-hover: #145ee9;
-      --blue-light: #407ef3;
-      --blue-dim: #1e2456;
-      --blue-glow: rgba(43, 112, 242, 0.15);
-      --blue-glow2: rgba(43, 112, 242, 0.08);
-      --text: #ffffff;
-      --text2: #c5cadc;
-      --text3: #8a8ca1;
-      --border: rgba(255,255,255,0.07);
-      --border2: rgba(43, 112, 242, 0.25);
-      --radius: 12px;
-      --radius-lg: 20px;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg0);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* ── TYPOGRAPHY ── */
-    h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; }
-    h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
-    h2 { font-size: clamp(1.5rem, 3vw, 2.4rem); }
-    h3 { font-size: 1.2rem; }
-    p { color: var(--text2); }
-    a { color: var(--blue); text-decoration: none; transition: color .2s; }
-    a:hover { color: var(--blue-light); }
-
-    .section-label {
-      display: inline-block;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue-light);
-      background: var(--blue-glow);
-      border: 1px solid var(--border2);
-      padding: 5px 14px;
-      border-radius: 100px;
-      margin-bottom: 18px;
-    }
-
-    /* ── LAYOUT ── */
-    .container {
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    section { padding: 90px 0; }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(8, 11, 26, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-      max-width: 1140px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: var(--text);
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #2b70f2 0%, #407ef3 100%);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-icon svg { width: 20px; height: 20px; fill: #fff; }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text2);
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color .2s;
-    }
-
-    .nav-links a:hover { color: var(--text); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      padding: 10px 22px;
-      border-radius: var(--radius);
-      border: none;
-      cursor: pointer;
-      transition: all .2s;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-    }
-    .btn-primary:hover {
-      background: var(--blue-hover);
-      color: #fff;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(43,112,242,.4);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text2);
-      border: 1px solid var(--border);
-    }
-    .btn-outline:hover {
-      border-color: var(--blue);
-      color: var(--blue);
-    }
-
-    .btn-lg {
-      font-size: 1rem;
-      padding: 14px 32px;
-      border-radius: 14px;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text2);
-    }
-    .btn-ghost:hover { color: var(--text); }
-
-    /* ── HERO ── */
-    #hero {
-      padding: 160px 0 100px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(43,112,242,.18) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 80% 60%, rgba(50,60,143,.12) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.82rem;
-      color: var(--blue-light);
-      background: var(--blue-glow);
-      border: 1px solid var(--border2);
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 24px;
-    }
-
-    .hero-badge .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #4ade80;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: .4; }
-    }
-
-    .hero-title {
-      margin-bottom: 20px;
-    }
-
-    .hero-title .accent {
-      background: linear-gradient(90deg, #2b70f2, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-desc {
-      font-size: 1.1rem;
-      color: var(--text2);
-      margin-bottom: 36px;
-      max-width: 500px;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 32px;
-      margin-top: 48px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-    }
-
-    .hero-stat-num {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    .hero-stat-label {
-      font-size: 0.82rem;
-      color: var(--text3);
-      margin-top: 4px;
-    }
-
-    /* ── TERMINAL MOCKUP ── */
-    .terminal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .terminal-header {
-      background: var(--bg3);
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .term-dot {
-      width: 12px; height: 12px;
-      border-radius: 50%;
-    }
-    .term-dot.r { background: #ff5f57; }
-    .term-dot.y { background: #febc2e; }
-    .term-dot.g { background: #28c840; }
-
-    .term-title {
-      font-size: 0.78rem;
-      color: var(--text3);
-      margin-left: 8px;
-    }
-
-    .terminal-body {
-      padding: 20px 24px;
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
-      font-size: 0.82rem;
-      line-height: 1.8;
-    }
-
-    .term-line { display: flex; gap: 10px; }
-    .term-prompt { color: var(--blue-light); flex-shrink: 0; }
-    .term-cmd { color: #c9d1d9; }
-    .term-output { color: var(--text3); padding-left: 20px; }
-    .term-output.ok { color: #4ade80; }
-    .term-output.info { color: var(--blue-light); }
-    .term-output.bot { color: #c084fc; }
-    .term-cursor {
-      display: inline-block;
-      width: 8px; height: 14px;
-      background: var(--blue);
-      vertical-align: middle;
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    /* ── FEATURES ── */
-    #features { background: var(--bg1); }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-
-    .section-header h2 { margin-bottom: 14px; }
-    .section-header p { font-size: 1.05rem; max-width: 600px; margin: 0 auto; }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      transition: all .25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--blue), transparent);
-      opacity: 0;
-      transition: opacity .25s;
-    }
-
-    .feature-card:hover {
-      border-color: var(--border2);
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(0,0,0,.3);
-    }
-
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-icon {
-      width: 48px; height: 48px;
-      background: var(--blue-glow);
-      border: 1px solid var(--border2);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-      font-size: 1.2rem;
-      color: var(--blue-light);
-    }
-
-    .feature-card h3 {
-      margin-bottom: 10px;
-      font-size: 1.05rem;
-    }
-
-    .feature-card p { font-size: 0.9rem; }
-
-    /* ── HOW IT WORKS ── */
-    #how {
-      background: var(--bg0);
-    }
-
-    .flow-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      position: relative;
-    }
-
-    .flow-grid::before {
-      content: '';
-      position: absolute;
-      top: 36px;
-      left: 12.5%;
-      right: 12.5%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border2), var(--blue), var(--border2), transparent);
-    }
-
-    .flow-step {
-      text-align: center;
-      padding: 0 16px;
-    }
-
-    .flow-num {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: var(--bg2);
-      border: 2px solid var(--border2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin: 0 auto 20px;
-      position: relative;
-      z-index: 1;
-      color: var(--blue-light);
-    }
-
-    .flow-step h3 { font-size: 1rem; margin-bottom: 8px; }
-    .flow-step p { font-size: 0.85rem; }
-
-    /* ── LLMS ── */
-    #llms { background: var(--bg1); }
-
-    .llms-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-    }
-
-    .llm-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .llm-chip {
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      text-align: center;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text2);
-      transition: all .2s;
-    }
-
-    .llm-chip:hover {
-      border-color: var(--border2);
-      color: var(--blue-light);
-      background: var(--blue-glow2);
-    }
-
-    .llm-chip.featured {
-      border-color: var(--border2);
-      color: var(--blue-light);
-      background: var(--blue-glow);
-    }
-
-    .llm-chip .chip-icon {
-      font-size: 1.2rem;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .messengers {
-      display: flex;
-      gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-
-    .messenger-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      padding: 8px 18px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text2);
-    }
-
-    .messenger-badge i { font-size: 1.1rem; }
-    .messenger-badge.tg i { color: #2CA5E0; }
-    .messenger-badge.max i { color: #005FF9; }
-
-    /* ── PRICING / CTA ── */
-    #pricing {
-      background: var(--bg0);
-    }
-
-    .pricing-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      max-width: 760px;
-      margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .pricing-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--blue), #60a5fa);
-    }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      margin-top: 32px;
-    }
-
-    .pricing-item {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .pricing-item i {
-      color: var(--blue-light);
-      margin-top: 3px;
-      flex-shrink: 0;
-    }
-
-    .pricing-item strong {
-      font-size: 0.9rem;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .pricing-item p { font-size: 0.83rem; }
-
-    /* ── CONTACT ── */
-    #contact {
-      background: var(--bg1);
-    }
-
-    .contact-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 60px;
-      align-items: start;
-    }
-
-    .contact-info h2 { margin-bottom: 16px; }
-    .contact-info p { margin-bottom: 24px; }
-
-    .contact-links {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .contact-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text2);
-      font-size: 0.92rem;
-      transition: color .2s;
-    }
-
-    .contact-link:hover { color: var(--text); }
-
-    .contact-link .cl-icon {
-      width: 38px; height: 38px;
-      background: var(--blue-glow);
-      border: 1px solid var(--border2);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--blue-light);
-      flex-shrink: 0;
-    }
-
-    .contact-form {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-    }
-
-    .form-group { margin-bottom: 18px; }
-
-    .form-label {
-      display: block;
-      font-size: 0.83rem;
-      font-weight: 500;
-      color: var(--text2);
-      margin-bottom: 8px;
-    }
-
-    .form-control {
-      width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.9rem;
-      padding: 11px 16px;
-      outline: none;
-      transition: border-color .2s;
-    }
-
-    .form-control:focus { border-color: var(--blue); }
-    .form-control::placeholder { color: var(--text3); }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 110px;
-    }
-
-    .form-submit {
-      width: 100%;
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 13px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .form-submit:hover {
-      background: var(--blue-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(43,112,242,.4);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--bg0);
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .footer-copy {
-      font-size: 0.83rem;
-      color: var(--text3);
-    }
-
-    .footer-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      font-size: 0.85rem;
-      color: var(--text3);
-      transition: color .2s;
-    }
-    .footer-links a:hover { color: var(--text2); }
-
-    .footer-tg {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.88rem;
-      color: var(--text2);
-      font-weight: 500;
-    }
-
-    .footer-tg i { color: #2CA5E0; font-size: 1rem; }
-
-    /* ── TEAM MODES ── */
-    #team { background: var(--bg0); }
-
-    .team-intro {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      margin-bottom: 64px;
-    }
-
-    .team-intro h2 { margin-bottom: 14px; }
-    .team-intro p { font-size: 1.05rem; }
-
-    .team-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .team-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--blue-glow);
-      border: 1px solid var(--border2);
-      border-radius: 100px;
-      padding: 6px 14px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      color: var(--blue-light);
-    }
-
-    .modes-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .mode-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: all .25s;
-    }
-
-    .mode-card:hover {
-      border-color: var(--border2);
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(0,0,0,.3);
-    }
-
-    .mode-header {
-      padding: 24px 26px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-    }
-
-    .mode-icon {
-      width: 52px; height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      flex-shrink: 0;
-    }
-
-    .mode-icon.shared  { background: rgba(43,112,242,.15); color: #60a5fa; }
-    .mode-icon.personal { background: rgba(52,211,153,.12); color: #34d399; }
-    .mode-icon.passive { background: rgba(251,191,36,.1); color: #fbbf24; }
-
-    .mode-tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 100px;
-      margin-bottom: 6px;
-    }
-
-    .mode-tag.shared   { background: rgba(43,112,242,.15); color: #60a5fa; }
-    .mode-tag.personal { background: rgba(52,211,153,.12); color: #34d399; }
-    .mode-tag.passive  { background: rgba(251,191,36,.1);  color: #fbbf24; }
-
-    .mode-header h3 { font-size: 1.05rem; margin-bottom: 4px; }
-    .mode-header p  { font-size: 0.85rem; }
-
-    .mode-body { padding: 20px 26px 24px; }
-
-    .mode-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .mode-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.87rem;
-      color: var(--text2);
-    }
-
-    .mode-features li i {
-      margin-top: 3px;
-      font-size: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .mode-features li i.shared   { color: #60a5fa; }
-    .mode-features li i.personal { color: #34d399; }
-    .mode-features li i.passive  { color: #fbbf24; }
-
-    .mode-mini-terminal {
-      margin-top: 18px;
-      background: var(--bg3);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      line-height: 1.7;
-    }
-
-    .mt-prompt { color: var(--blue-light); }
-    .mt-name   { color: #c084fc; }
-    .mt-bot    { color: #4ade80; }
-    .mt-dim    { color: var(--text3); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .terminal { display: none; }
-      .features-grid { grid-template-columns: 1fr 1fr; }
-      .flow-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-      .flow-grid::before { display: none; }
-      .llms-wrapper { grid-template-columns: 1fr; }
-      .team-intro { grid-template-columns: 1fr; gap: 24px; }
-      .modes-grid { grid-template-columns: 1fr; }
-      .contact-wrapper { grid-template-columns: 1fr; }
-      .pricing-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .nav-links { display: none; }
-      section { padding: 64px 0; }
-      #hero { padding: 120px 0 64px; }
-      .hero-stats { gap: 20px; flex-wrap: wrap; }
-    }
-
-    .lang-toggle {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 3px;
-      margin-right: 12px;
-    }
-    .lang-btn {
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: none;
-      background: transparent;
-      color: var(--text3);
-      cursor: pointer;
-      transition: all .15s;
-      letter-spacing: .05em;
-    }
-    .lang-btn.active {
-      background: var(--blue);
-      color: #fff;
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -956,7 +67,25 @@
 
 <!-- ── HERO ── -->
 <section id="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-bg">
+    <!-- floating geometric shapes -->
+    <svg class="hero-shape hero-shape-1" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="150" cy="150" r="148" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="150" cy="150" r="110" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="150" cy="150" r="70" stroke="#2563eb" stroke-width="0.75"/>
+      <line x1="2" y1="150" x2="298" y2="150" stroke="#2563eb" stroke-width="0.5"/>
+      <line x1="150" y1="2" x2="150" y2="298" stroke="#2563eb" stroke-width="0.5"/>
+    </svg>
+    <svg class="hero-shape hero-shape-2" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="10" width="160" height="160" rx="24" stroke="#2563eb" stroke-width="1.5"/>
+      <rect x="40" y="40" width="100" height="100" rx="16" stroke="#2563eb" stroke-width="1"/>
+      <circle cx="90" cy="90" r="20" stroke="#2563eb" stroke-width="0.75"/>
+    </svg>
+    <svg class="hero-shape hero-shape-3" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 95,75 5,75" stroke="#2563eb" stroke-width="1.5" fill="none"/>
+      <polygon points="50,20 82,70 18,70" stroke="#2563eb" stroke-width="0.75" fill="none"/>
+    </svg>
+  </div>
   <div class="container">
     <div class="hero-grid">
       <div>
@@ -1002,26 +131,26 @@
         <div class="terminal-body">
           <div class="term-line">
             <span class="term-prompt">you&gt;</span>
-            <span class="term-cmd">Покажи задачи за сегодня и составь план</span>
+            <span class="term-cmd">Show today's tasks and make a plan</span>
           </div>
-          <div class="term-output info">🤖 Ищу в базе знаний...</div>
-          <div class="term-output ok">✓ Найдено 7 задач в CRM</div>
-          <div class="term-output bot">📋 Вот приоритеты на сегодня:</div>
-          <div class="term-output bot">1. Встреча с клиентом — 14:00</div>
-          <div class="term-output bot">2. Ревью коммерческого предложения</div>
-          <div class="term-output bot">3. Отчёт по продажам за май</div>
+          <div class="term-output info">🤖 Searching knowledge base...</div>
+          <div class="term-output ok">✓ Found 7 tasks in CRM</div>
+          <div class="term-output bot">📋 Here are today's priorities:</div>
+          <div class="term-output bot">1. Client meeting — 14:00</div>
+          <div class="term-output bot">2. Review commercial proposal</div>
+          <div class="term-output bot">3. Sales report for May</div>
           <br>
           <div class="term-line">
             <span class="term-prompt">you&gt;</span>
             <span class="term-cmd">/model gemini</span>
           </div>
-          <div class="term-output ok">✓ Переключился на Gemini 2.0 Flash</div>
+          <div class="term-output ok">✓ Switched to Gemini 2.0 Flash</div>
           <br>
           <div class="term-line">
             <span class="term-prompt">you&gt;</span>
-            <span class="term-cmd">Напомни через 2 часа про встречу</span>
+            <span class="term-cmd">Remind me in 2 hours about the meeting</span>
           </div>
-          <div class="term-output ok">✓ Напоминание создано на 14:00</div>
+          <div class="term-output ok">✓ Reminder set for 14:00</div>
           <div class="term-line">
             <span class="term-prompt">_</span>
             <span class="term-cursor"></span>
@@ -1035,7 +164,7 @@
 <!-- ── FEATURES ── -->
 <section id="features">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label" data-i18n="feat_label">Features</div>
       <h2 data-i18n="feat_title">Everything you need — built in</h2>
       <p data-i18n="feat_subtitle">aiClaw is not just a chatbot. It's a full AI agent with memory, tools and integrations.</p>
@@ -1093,7 +222,7 @@
 <!-- ── HOW IT WORKS ── -->
 <section id="how">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label" data-i18n="how_label">Architecture</div>
       <h2 data-i18n="how_title">How it works</h2>
       <p data-i18n="how_subtitle">Simple and reliable chain: from a messenger message to the result.</p>
@@ -1127,7 +256,7 @@
 <section id="llms">
   <div class="container">
     <div class="llms-wrapper">
-      <div>
+      <div class="reveal">
         <div class="section-label" data-i18n="llm_label">Compatibility</div>
         <h2 data-i18n-html="llm_title">Any LLM.<br>Any messenger.</h2>
         <p style="margin: 16px 0 24px;" data-i18n="llm_desc">Don't lock in to one provider. Connect the latest models as they release. Full support for OpenAI-compatible API.</p>
@@ -1197,7 +326,7 @@
 <section id="team">
   <div class="container">
     <div class="team-intro">
-      <div>
+      <div class="reveal">
         <div class="section-label" data-i18n="team_label">For teams</div>
         <h2 data-i18n-html="team_title">One agent.<br>The whole team.</h2>
         <p data-i18n="team_desc">aiClaw works in corporate Telegram and Max chats. Choose the mode for your scenario — from a shared duty assistant to a personal assistant for every employee.</p>
@@ -1208,7 +337,7 @@
           <div class="team-badge"><i class="fas fa-lock"></i> Изоляция сессий</div>
         </div>
       </div>
-      <div>
+      <div class="reveal">
         <p style="font-size:0.9rem; color:var(--text3); line-height:1.9;" data-i18n="team_note">The mode is set in config and can be changed without restart. Different rules can be set for different groups — e.g. passive mode in a work chat, personal in DMs with the manager.</p>
       </div>
     </div>
@@ -1245,10 +374,10 @@
             </li>
           </ul>
           <div class="mode-mini-terminal">
-            <div><span class="mt-name">Иван:</span> <span class="mt-dim">какой статус по задаче №42?</span></div>
-            <div><span class="mt-name">Мария:</span> <span class="mt-dim">и кто ответственный?</span></div>
-            <div><span class="mt-bot">🤖 Задача №42 в работе у Петра,</span></div>
-            <div><span class="mt-bot">   дедлайн — 3 июня.</span></div>
+            <div><span class="mt-name">Ivan:</span> <span class="mt-dim">what's the status of task #42?</span></div>
+            <div><span class="mt-name">Maria:</span> <span class="mt-dim">and who's responsible?</span></div>
+            <div><span class="mt-bot">🤖 Task #42 is with Peter,</span></div>
+            <div><span class="mt-bot">   deadline — June 3.</span></div>
           </div>
         </div>
       </div>
@@ -1283,10 +412,10 @@
             </li>
           </ul>
           <div class="mode-mini-terminal">
-            <div><span class="mt-name">Иван:</span> <span class="mt-dim">покажи мои задачи</span></div>
-            <div><span class="mt-bot">🤖 Иван, у вас 3 задачи:</span></div>
-            <div><span class="mt-bot">   1. Отчёт · 2. Встреча · 3. КП</span></div>
-            <div class="mt-dim" style="margin-top:4px;">— Мария видит только свои —</div>
+            <div><span class="mt-name">Ivan:</span> <span class="mt-dim">show my tasks</span></div>
+            <div><span class="mt-bot">🤖 Ivan, you have 3 tasks:</span></div>
+            <div><span class="mt-bot">   1. Report · 2. Meeting · 3. Proposal</span></div>
+            <div class="mt-dim" style="margin-top:4px;">— Maria sees only hers —</div>
           </div>
         </div>
       </div>
@@ -1321,10 +450,10 @@
             </li>
           </ul>
           <div class="mode-mini-terminal">
-            <div><span class="mt-dim">Иван: давай встретимся в 15:00</span></div>
-            <div><span class="mt-dim">Мария: ок, жду</span></div>
-            <div><span class="mt-name">Петр:</span> <span class="mt-prompt">@бот</span> <span class="mt-dim">напомни в 14:45</span></div>
-            <div><span class="mt-bot">🤖 Напоминание создано ✓</span></div>
+            <div><span class="mt-dim">Ivan: let's meet at 15:00</span></div>
+            <div><span class="mt-dim">Maria: ok, sounds good</span></div>
+            <div><span class="mt-name">Peter:</span> <span class="mt-prompt">@bot</span> <span class="mt-dim">remind me at 14:45</span></div>
+            <div><span class="mt-bot">🤖 Reminder set ✓</span></div>
           </div>
         </div>
       </div>
@@ -1336,12 +465,12 @@
 <!-- ── PRICING ── -->
 <section id="pricing">
   <div class="container">
-    <div class="section-header">
+    <div class="section-header reveal">
       <div class="section-label" data-i18n="pricing_label">Setup</div>
       <h2 data-i18n="pricing_title">Your server — your rules</h2>
       <p data-i18n="pricing_sub">Pay once for installation and setup. Then only server and LLM costs.</p>
     </div>
-    <div class="pricing-card">
+    <div class="pricing-card reveal">
       <h3 style="font-size:1.3rem; margin-bottom:8px;" data-i18n="pricing_card_title">What's included in the setup</h3>
       <p style="font-size:0.9rem;" data-i18n="pricing_card_sub">We configure for your tasks, integrate needed services, train users</p>
       <div class="pricing-grid">
@@ -1399,10 +528,10 @@
 </section>
 
 <!-- ── OPEN SOURCE ── -->
-<section id="opensource" style="background: var(--bg1);">
+<section id="opensource">
   <div class="container">
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
-      <div>
+      <div class="reveal">
         <div class="section-label" data-i18n="oss_label">Open Source</div>
         <h2 data-i18n-html="oss_title">We build tools.<br>We share with the community.</h2>
         <p style="margin:16px 0 24px;" data-i18n="oss_desc">In building aiClaw we create useful tools and publish them open source. Two projects are already on GitHub.</p>
@@ -1411,34 +540,40 @@
           <span data-i18n="oss_btn">Open projects</span>
         </a>
       </div>
-      <div style="display:flex; flex-direction:column; gap:14px;">
-        <a href="/opensource.html#agent-runner" style="text-decoration:none;">
-          <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 24px; transition:all .25s; display:flex; align-items:flex-start; gap:16px;" onmouseover="this.style.borderColor='rgba(43,112,242,.35)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='none'">
-            <div style="width:44px;height:44px;background:var(--blue-glow);border:1px solid var(--border2);border-radius:11px;display:flex;align-items:center;justify-content:center;color:var(--blue-light);flex-shrink:0;font-size:1.1rem;"><i class="fas fa-terminal"></i></div>
+      <div style="display:flex; flex-direction:column; gap:14px;" class="reveal">
+        <a href="/opensource.html#agent-runner" class="oss-project-link">
+          <div class="oss-project-card">
+            <div class="opc-icon" style="background:var(--blue-dim); border:1px solid var(--border2); color:var(--blue);">
+              <i class="fas fa-terminal"></i>
+            </div>
             <div>
-              <div style="font-weight:700; margin-bottom:4px;">agent-runner</div>
-              <div style="font-size:0.85rem; color:var(--text3);" data-i18n="ar_desc">Agentic loop for any OpenAI-compatible LLM. 15 tools, MCP, memory.</div>
-              <div style="font-size:0.78rem; color:var(--blue-light); margin-top:6px;"><i class="fab fa-github" style="margin-right:4px;"></i>deploy-sh/agent-runner</div>
+              <div class="opc-title">agent-runner</div>
+              <div class="opc-desc" data-i18n="ar_desc">Agentic loop for any OpenAI-compatible LLM. 15 tools, MCP, memory.</div>
+              <div class="opc-repo" style="color:var(--blue);"><i class="fab fa-github" style="margin-right:4px;"></i>deploy-sh/agent-runner</div>
             </div>
           </div>
         </a>
-        <a href="/opensource.html#giga-cli" style="text-decoration:none;">
-          <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 24px; transition:all .25s; display:flex; align-items:flex-start; gap:16px;" onmouseover="this.style.borderColor='rgba(192,132,252,.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='none'">
-            <div style="width:44px;height:44px;background:rgba(192,132,252,.12);border:1px solid rgba(192,132,252,.25);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#c084fc;flex-shrink:0;font-size:1.1rem;"><i class="fas fa-code-fork"></i></div>
+        <a href="/opensource.html#giga-cli" class="oss-project-link">
+          <div class="oss-project-card">
+            <div class="opc-icon" style="background:var(--purple-glow); border:1px solid rgba(124,58,237,.25); color:var(--purple);">
+              <i class="fas fa-code-fork"></i>
+            </div>
             <div>
-              <div style="font-weight:700; margin-bottom:4px;">giga-cli</div>
-              <div style="font-size:0.85rem; color:var(--text3);" data-i18n="gc_desc">Fork of agent-runner for GigaChat (Sber). OAuth, compatibility adapters, free tier.</div>
-              <div style="font-size:0.78rem; color:#c084fc; margin-top:6px;"><i class="fab fa-github" style="margin-right:4px;"></i>deploy-sh/agent-runner · ветка giga_cli</div>
+              <div class="opc-title">giga-cli</div>
+              <div class="opc-desc" data-i18n="gc_desc">Fork of agent-runner for GigaChat (Sber). OAuth, compatibility adapters, free tier.</div>
+              <div class="opc-repo" style="color:var(--purple);"><i class="fab fa-github" style="margin-right:4px;"></i>deploy-sh/agent-runner · ветка giga_cli</div>
             </div>
           </div>
         </a>
-        <a href="https://repio.dev" target="_blank" style="text-decoration:none;">
-          <div style="background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 24px; transition:all .25s; display:flex; align-items:flex-start; gap:16px;" onmouseover="this.style.borderColor='rgba(251,146,60,.3)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)'; this.style.transform='none'">
-            <div style="width:44px;height:44px;background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.25);border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fb923c;flex-shrink:0;font-size:1.1rem;"><i class="fas fa-record-vinyl"></i></div>
+        <a href="https://repio.dev" target="_blank" class="oss-project-link">
+          <div class="oss-project-card">
+            <div class="opc-icon" style="background:var(--orange-glow); border:1px solid rgba(234,88,12,.25); color:var(--orange);">
+              <i class="fas fa-record-vinyl"></i>
+            </div>
             <div>
-              <div style="font-weight:700; margin-bottom:4px;">repio.dev <i class="fas fa-arrow-up-right-from-square" style="font-size:0.7rem; color:var(--text3); margin-left:4px;"></i></div>
-              <div style="font-size:0.85rem; color:var(--text3);" data-i18n="rp_desc">Record and replay macros. Browser action automation without code.</div>
-              <div style="font-size:0.78rem; color:#fb923c; margin-top:6px;"><i class="fas fa-globe" style="margin-right:4px;"></i>repio.dev</div>
+              <div class="opc-title">repio.dev <i class="fas fa-arrow-up-right-from-square" style="font-size:0.7rem; color:var(--text3); margin-left:4px;"></i></div>
+              <div class="opc-desc" data-i18n="rp_desc">Record and replay macros. Browser action automation without code.</div>
+              <div class="opc-repo" style="color:var(--orange);"><i class="fas fa-globe" style="margin-right:4px;"></i>repio.dev</div>
             </div>
           </div>
         </a>
@@ -1451,7 +586,7 @@
 <section id="contact">
   <div class="container">
     <div class="contact-wrapper">
-      <div class="contact-info">
+      <div class="contact-info reveal">
         <div class="section-label" data-i18n="contact_label">Contacts</div>
         <h2 data-i18n="contact_title">Tell us about your tasks</h2>
         <p data-i18n="contact_desc">We'll discuss how aiClaw can help your business. Answer any questions about integration and setup.</p>
@@ -1472,7 +607,7 @@
           </a>
         </div>
       </div>
-      <div class="contact-form">
+      <div class="contact-form reveal">
         <form action="https://formsubmit.co/aiclaw@korfix.app" method="POST">
           <input type="hidden" name="_subject" value="Заявка с сайта aiClaw">
           <input type="hidden" name="_captcha" value="false">
@@ -1531,192 +666,6 @@
   </div>
 </footer>
 
-<script>
-const T = {
-  en: {
-    nav_features:"Features", nav_how:"How it works", nav_llm:"LLM", nav_teams:"Teams", nav_oss:"Open Source", nav_contact:"Contacts", nav_cta:"Get started",
-    hero_badge:"Runs 24/7 on your server",
-    hero_title:"AI Agent<br><span class=\"accent\">of a new generation</span><br>for your business",
-    hero_desc:"Personal assistant in Telegram and Max. Any LLM — Claude, GPT, Gemini, GigaChat. Long-term memory, automation, knowledge base. Runs on your server.",
-    hero_cta:"Get in touch", hero_more:"Learn more",
-    stat_llm:"LLM supported", stat_msg:"Messengers", stat_uptime:"Agent uptime", stat_server:"Your infra",
-    feat_label:"Features", feat_title:"Everything you need — built in",
-    feat_subtitle:"aiClaw is not just a chatbot. It's a full AI agent with memory, tools and integrations.",
-    f1_title:"Long-term memory", f1_desc:"Two-level memory: SQLite for dialog history and pgvector for semantic fact search. The agent remembers everything important.",
-    f2_title:"Hot LLM switching", f2_desc:"Switch model mid-chat without restart. Claude, GPT-4o, Gemini, GigaChat and local models.",
-    f3_title:"Task scheduler", f3_desc:"Built-in cron scheduler. Reminders, recurring reports, automated digests — all configured by voice.",
-    f4_title:"Knowledge base (Vault)", f4_desc:"Structured wiki of your projects. The agent auto-logs decisions and updates the base. Always in context.",
-    f5_title:"Integrations", f5_desc:"Cloudflare, SWeb, Hestia, n8n, Perplexity, Playwright. Manage infrastructure directly from Telegram.",
-    f6_title:"Image generation", f6_desc:"Flux Dev, Kontext, Schnell, Ultra via fal.ai. Create visuals with one command right in the messenger.",
-    f7_title:"Privacy & security", f7_desc:"The agent runs only on your server. No external storage, no SaaS. Your data stays with you.",
-    f8_title:"Extensibility", f8_desc:"BotModule plugin architecture. Any custom commands and integrations added without touching the core.",
-    f9_title:"Group chats", f9_desc:"Full support for Telegram groups and topics. Flexible session isolation: shared, per-user, per-topic.",
-    how_label:"Architecture", how_title:"How it works",
-    how_subtitle:"Simple and reliable chain: from a messenger message to the result.",
-    how1_title:"Messenger", how1_desc:"Telegram or Max. Text, voice, documents, photos — the agent understands everything.",
-    how2_desc:"Memory, scheduler, tools. Context from the knowledge base loads automatically.",
-    how3_title:"LLM of choice", how3_desc:"Claude, GPT, Gemini, GigaChat or any local model. Switch when needed.",
-    how4_title:"Result", how4_desc:"Answer, action, reminder. The agent remembers decisions and learns from your context.",
-    llm_label:"Compatibility", llm_title:"Any LLM.<br>Any messenger.",
-    llm_desc:"Don't lock in to one provider. Connect the latest models as they release. Full support for OpenAI-compatible API.",
-    llm_msg_label:"Messengers",
-    team_label:"For teams", team_title:"One agent.<br>The whole team.",
-    team_desc:"aiClaw works in corporate Telegram and Max chats. Choose the mode for your scenario — from a shared duty assistant to a personal assistant for every employee.",
-    team_note:"The mode is set in config and can be changed without restart. Different rules can be set for different groups — e.g. passive mode in a work chat, personal in DMs with the manager.",
-    mode1_tag:"shared", mode1_title:"Shared chat", mode1_sub:"One dialog for the whole group",
-    mode1_f1:"All participants' messages go into one shared session",
-    mode1_f2:"The agent sees the full chat context and knows who wrote what",
-    mode1_f3:"Good for duty assistant, digests, briefings",
-    mode1_f4:"Shared memory — facts from conversations available to all",
-    mode2_tag:"per_user", mode2_title:"Personal", mode2_sub:"Separate dialog for each",
-    mode2_f1:"Each group member gets their own isolated session",
-    mode2_f2:"The agent remembers each employee's history and context separately",
-    mode2_f3:"Privacy: others' messages don't get into your context",
-    mode2_f4:"Ideal for teams where everyone has their own tasks and projects",
-    mode3_tag:"mention_only", mode3_title:"Passive", mode3_sub:"Responds only when addressed",
-    mode3_f1:"Stays silent in the background — doesn't react to regular messages",
-    mode3_f2:"Activates on @mention or a keyword",
-    mode3_f3:"Doesn't interrupt team conversation, but always at hand",
-    mode3_f4:"Optimal for active work chats",
-    pricing_label:"Setup", pricing_title:"Your server — your rules",
-    pricing_sub:"Pay once for installation and setup. Then only server and LLM costs.",
-    pricing_card_title:"What's included in the setup",
-    pricing_card_sub:"We configure for your tasks, integrate needed services, train users",
-    p1_title:"VDS deployment", p1_desc:"Install on your server, systemd service, autostart",
-    p2_title:"LLM configuration", p2_desc:"Connect chosen providers, configure roles",
-    p3_title:"Memory setup", p3_desc:"SQLite + pgvector, semantic search, knowledge bases",
-    p4_title:"Integrations", p4_desc:"CRM, n8n, cloud services, your APIs",
-    p5_title:"Team training", p5_desc:"Instructions, command templates, best practices",
-    p6_title:"Updates", p6_desc:"Binary agent updates as new versions release",
-    pricing_btn:"Request setup",
-    oss_label:"Open Source", oss_title:"We build tools.<br>We share with the community.",
-    oss_desc:"In building aiClaw we create useful tools and publish them open source. Two projects are already on GitHub.",
-    oss_btn:"Open projects",
-    ar_desc:"Agentic loop for any OpenAI-compatible LLM. 15 tools, MCP, memory.",
-    gc_desc:"Fork of agent-runner for GigaChat (Sber). OAuth, compatibility adapters, free tier.",
-    rp_desc:"Record and replay macros. Browser action automation without code.",
-    contact_label:"Contacts", contact_title:"Tell us about your tasks",
-    contact_desc:"We'll discuss how aiClaw can help your business. Answer any questions about integration and setup.",
-    contact_email:"Email", contact_tg:"Telegram",
-    form_name:"Your name", form_name_ph:"How should we address you?",
-    form_contact:"Telegram or email", form_contact_ph:"@username or email@domain.com",
-    form_msg:"Task / question", form_msg_ph:"Describe what you want to automate or what problems to solve...",
-    form_btn:"Send request",
-    footer_tagline:"AI agent on your server",
-    footer_copy:"2026 aiClaw · Product by"
-  },
-  ru: {
-    nav_features:"Возможности", nav_how:"Как работает", nav_llm:"LLM", nav_teams:"Команды", nav_oss:"Open Source", nav_contact:"Контакты", nav_cta:"Подключиться",
-    hero_badge:"Работает 24/7 на вашем сервере",
-    hero_title:"AI-агент<br><span class=\"accent\">нового поколения</span><br>для вашего бизнеса",
-    hero_desc:"Персональный ассистент в Telegram и Max. Любая LLM — Claude, GPT, Gemini, GigaChat. Долгосрочная память, автоматизация, база знаний. Живёт на вашем сервере.",
-    hero_cta:"Оставить заявку", hero_more:"Узнать больше",
-    stat_llm:"Поддержаных LLM", stat_msg:"Мессенджера", stat_uptime:"Работа агента", stat_server:"Ваша инфраструктура",
-    feat_label:"Возможности", feat_title:"Всё что нужно — уже внутри",
-    feat_subtitle:"aiClaw — это не просто чат-бот. Это полноценный AI-агент с памятью, инструментами и интеграциями.",
-    f1_title:"Долгосрочная память", f1_desc:"Два уровня памяти: SQLite для истории диалогов и pgvector для семантического поиска фактов. Агент помнит всё важное.",
-    f2_title:"Горячее переключение LLM", f2_desc:"Меняйте модель прямо в чате без перезапуска. Claude, GPT-4o, Gemini, GigaChat и локальные модели.",
-    f3_title:"Планировщик задач", f3_desc:"Встроенный cron-шедулер. Напоминания, регулярные отчёты, автоматические дайджесты — всё настраивается голосом.",
-    f4_title:"База знаний (Vault)", f4_desc:"Структурированная wiki ваших проектов. Агент автоматически логирует решения и обновляет базу. Всегда в контексте.",
-    f5_title:"Интеграции", f5_desc:"Cloudflare, SWeb, Hestia, n8n, Perplexity, Playwright. Управляйте инфраструктурой прямо из Telegram.",
-    f6_title:"Генерация изображений", f6_desc:"Flux Dev, Kontext, Schnell, Ultra через fal.ai. Создавайте визуалы одной командой прямо в мессенджере.",
-    f7_title:"Приватность и безопасность", f7_desc:"Агент работает только на вашем сервере. Никаких внешних хранилищ, никакого SaaS. Ваши данные — только у вас.",
-    f8_title:"Расширяемость", f8_desc:"Плагинная архитектура BotModule. Любые кастомные команды и интеграции добавляются без изменения ядра.",
-    f9_title:"Групповые чаты", f9_desc:"Полная поддержка групп и топиков Telegram. Гибкая изоляция сессий: общая, per-user, per-topic.",
-    how_label:"Архитектура", how_title:"Как это работает",
-    how_subtitle:"Простая и надёжная цепочка: от сообщения в мессенджере до результата.",
-    how1_title:"Мессенджер", how1_desc:"Telegram или Max. Текст, голос, документы, фото — агент понимает всё.",
-    how2_desc:"Память, шедулер, инструменты. Контекст из базы знаний подгружается автоматически.",
-    how3_title:"LLM по выбору", how3_desc:"Claude, GPT, Gemini, GigaChat или любая локальная модель. Переключаете когда нужно.",
-    how4_title:"Результат", how4_desc:"Ответ, действие, напоминание. Агент запоминает решения и учится на вашем контексте.",
-    llm_label:"Совместимость", llm_title:"Любой LLM.<br>Любой мессенджер.",
-    llm_desc:"Не привязывайтесь к одному провайдеру. Подключайте самые актуальные модели по мере их выхода. Полная поддержка OpenAI-совместимого API.",
-    llm_msg_label:"Мессенджеры",
-    team_label:"Для команд", team_title:"Один агент.<br>Вся команда.",
-    team_desc:"aiClaw работает в корпоративных чатах Telegram и Max. Выберите режим под ваш сценарий — от общего дежурного ассистента до персонального помощника каждого сотрудника.",
-    team_note:"Режим работы задаётся в конфигурации и при необходимости меняется без перезапуска. Разные правила можно настроить для разных групп — например, в рабочем чате пассивный режим, в личке с руководителем — персональный.",
-    mode1_tag:"shared", mode1_title:"Общий чат", mode1_sub:"Единый диалог на всю группу",
-    mode1_f1:"Все сообщения участников складываются в одну общую сессию",
-    mode1_f2:"Агент видит весь контекст чата и знает кто что написал",
-    mode1_f3:"Подходит для дежурного ассистента команды, дайджестов, брифингов",
-    mode1_f4:"Общая память — факты из разговоров доступны всем участникам",
-    mode2_tag:"per_user", mode2_title:"Персональный", mode2_sub:"Отдельный диалог с каждым",
-    mode2_f1:"Каждый участник группы получает свою изолированную сессию",
-    mode2_f2:"Агент помнит историю и контекст каждого сотрудника отдельно",
-    mode2_f3:"Приватность: чужие сообщения не попадают в ваш контекст",
-    mode2_f4:"Идеально для команд где у каждого свои задачи и проекты",
-    mode3_tag:"mention_only", mode3_title:"Пассивный", mode3_sub:"Отвечает только на обращения",
-    mode3_f1:"Молчит в фоне — не реагирует на обычные сообщения в чате",
-    mode3_f2:"Включается при упоминании @бот или ключевого слова",
-    mode3_f3:"Не мешает живому общению команды, но всегда под рукой",
-    mode3_f4:"Оптимален для рабочих чатов с активной перепиской",
-    pricing_label:"Установка", pricing_title:"Ваш сервер — ваши правила",
-    pricing_sub:"Платите один раз за установку и настройку. Дальше только расходы на сервер и выбранные LLM.",
-    pricing_card_title:"Что входит в установку",
-    pricing_card_sub:"Настраиваем под ваши задачи, интегрируем нужные сервисы, обучаем пользователей",
-    p1_title:"Развёртывание на VDS", p1_desc:"Установка на ваш сервер, systemd-сервис, автозапуск",
-    p2_title:"Настройка LLM", p2_desc:"Подключение выбранных провайдеров, конфигурация ролей",
-    p3_title:"Настройка памяти", p3_desc:"SQLite + pgvector, семантический поиск, базы знаний",
-    p4_title:"Интеграции", p4_desc:"CRM, n8n, облачные сервисы, ваши API",
-    p5_title:"Обучение команды", p5_desc:"Инструкции, шаблоны команд, лучшие практики",
-    p6_title:"Обновления", p6_desc:"Бинарные обновления агента по мере выхода новых версий",
-    pricing_btn:"Оставить заявку на установку",
-    oss_label:"Open Source", oss_title:"Строим инструменты.<br>Делимся с сообществом.",
-    oss_desc:"В процессе разработки aiClaw мы создаём полезные инструменты и публикуем их с открытым кодом. Два проекта уже доступны на GitHub.",
-    oss_btn:"Открытые проекты",
-    ar_desc:"Агентский цикл для любого OpenAI-совместимого LLM. 15 инструментов, MCP, память.",
-    gc_desc:"Форк agent-runner под GigaChat (Сбер). OAuth, адаптеры совместимости, бесплатный тариф.",
-    rp_desc:"Запись и воспроизведение макросов. Автоматизация действий в браузере без кода.",
-    contact_label:"Контакты", contact_title:"Расскажите о своих задачах",
-    contact_desc:"Обсудим как aiClaw может помочь вашему бизнесу. Ответим на любые вопросы по интеграции и настройке.",
-    contact_email:"Email", contact_tg:"Telegram",
-    form_name:"Ваше имя", form_name_ph:"Как к вам обращаться?",
-    form_contact:"Telegram или email", form_contact_ph:"@username или email@domain.ru",
-    form_msg:"Задача / вопрос", form_msg_ph:"Опишите что хотите автоматизировать или какие задачи решить...",
-    form_btn:"Отправить заявку",
-    footer_tagline:"AI-агент на вашем сервере",
-    footer_copy:"2026 aiClaw · Продукт"
-  }
-};
-
-function setLang(lang) {
-  document.documentElement.lang = lang;
-  localStorage.setItem('aiclaw_lang', lang);
-  document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (T[lang][key] !== undefined) el.textContent = T[lang][key];
-  });
-  document.querySelectorAll('[data-i18n-html]').forEach(el => {
-    const key = el.dataset['i18nHtml'];
-    if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
-  });
-  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-    const key = el.dataset.i18nPh;
-    if (T[lang][key] !== undefined) el.placeholder = T[lang][key];
-  });
-}
-
-(function(){
-  const saved = localStorage.getItem('aiclaw_lang') || 'en';
-  setLang(saved);
-  // Smooth scroll active nav
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
-    navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : ''; });
-  });
-  if (window.location.search.includes('sent=1')) {
-    const msg = document.createElement('div');
-    msg.style.cssText = 'position:fixed;top:80px;right:24px;background:#1d1e32;border:1px solid #2b70f2;color:#fff;padding:16px 24px;border-radius:12px;z-index:999;font-size:.9rem;';
-    msg.innerHTML = '<i class="fas fa-check-circle" style="color:#4ade80;margin-right:8px;"></i>Request sent! We\'ll be in touch soon.';
-    document.body.appendChild(msg);
-    setTimeout(() => msg.remove(), 5000);
-  }
-})();
-</script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
