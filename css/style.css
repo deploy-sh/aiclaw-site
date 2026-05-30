@@ -659,8 +659,8 @@ nav.scrolled .nav-inner {
 }
 
 .plan-card {
-  background: var(--bg0);
-  border: 1px solid var(--border);
+  background: var(--bg1);
+  border: 1px solid var(--bg4);
   border-radius: var(--radius-lg);
   padding: 28px 32px;
   position: relative;
