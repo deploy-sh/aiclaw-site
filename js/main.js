@@ -3,7 +3,7 @@
 /* ── i18n ── */
 var T = {
   en: {
-    nav_features:"Features", nav_how:"How it works", nav_llm:"LLM", nav_teams:"Teams", nav_oss:"Open Source", nav_pricing:"Pricing", nav_contact:"Contacts", nav_cta:"Get started",
+    nav_features:"Features", nav_how:"How it works", nav_llm:"LLM", nav_teams:"Teams", nav_oss:"Open Source", nav_pricing:"Pricing", nav_contact:"Contacts", nav_cta:"Get started", nav_cabinet:"Account",
     hero_badge:"Runs 24/7 on your server",
     hero_title:"AI Agent<br><span class=\"accent\">of a new generation</span><br>for your business",
     hero_desc:"Personal assistant in Telegram and Max. Any LLM \u2014 Claude, GPT, Gemini, GigaChat. Long-term memory, automation, knowledge base. Runs on your server.",
@@ -85,7 +85,7 @@ var T = {
     footer_copy:"2026 aiClaw \u00b7 Product by"
   },
   ru: {
-    nav_features:"Возможности", nav_how:"Как работает", nav_llm:"LLM", nav_teams:"Команды", nav_oss:"Open Source", nav_pricing:"Цены", nav_contact:"Контакты", nav_cta:"Подключиться",
+    nav_features:"Возможности", nav_how:"Как работает", nav_llm:"LLM", nav_teams:"Команды", nav_oss:"Open Source", nav_pricing:"Цены", nav_contact:"Контакты", nav_cta:"Подключиться", nav_cabinet:"Личный кабинет",
     hero_badge:"\u0420\u0430\u0431\u043e\u0442\u0430\u0435\u0442 24/7 \u043d\u0430 \u0432\u0430\u0448\u0435\u043c \u0441\u0435\u0440\u0432\u0435\u0440\u0435",
     hero_title:"AI-\u0430\u0433\u0435\u043d\u0442<br><span class=\"accent\">\u043d\u043e\u0432\u043e\u0433\u043e \u043f\u043e\u043a\u043e\u043b\u0435\u043d\u0438\u044f</span><br>\u0434\u043b\u044f \u0432\u0430\u0448\u0435\u0433\u043e \u0431\u0438\u0437\u043d\u0435\u0441\u0430",
     hero_desc:"\u041f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u0430\u0441\u0441\u0438\u0441\u0442\u0435\u043d\u0442 \u0432 Telegram \u0438 Max. \u041b\u044e\u0431\u0430\u044f LLM \u2014 Claude, GPT, Gemini, GigaChat. \u0414\u043e\u043b\u0433\u043e\u0441\u0440\u043e\u0447\u043d\u0430\u044f \u043f\u0430\u043c\u044f\u0442\u044c, \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f, \u0431\u0430\u0437\u0430 \u0437\u043d\u0430\u043d\u0438\u0439. \u0416\u0438\u0432\u0451\u0442 \u043d\u0430 \u0432\u0430\u0448\u0435\u043c \u0441\u0435\u0440\u0432\u0435\u0440\u0435.",
