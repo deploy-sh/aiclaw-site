@@ -105,6 +105,20 @@ function cab_token_consume($t){
   if(empty($r['reuse'])) @unlink($f);  // one-time links consumed; reusable links kept until expiry
   return $r;
 }
+// --- password accounts (bcrypt, files in private/, keyed by email hash; no DB) ---
+function cab_users_dir(){
+  $cfg=cab_cfg(); $d=$cfg['users_dir'];
+  if(!is_dir($d)) @mkdir($d,0700,true);
+  return rtrim($d,'/');
+}
+function cab_user_file($email){ return cab_users_dir().'/'.hash('sha256', strtolower(trim($email))); }
+function cab_pw_set($email,$pw){ file_put_contents(cab_user_file($email), password_hash($pw, PASSWORD_DEFAULT), LOCK_EX); }
+function cab_pw_exists($email){ return is_file(cab_user_file($email)); }
+function cab_pw_check($email,$pw){
+  $f=cab_user_file($email); if(!is_file($f)) return false;
+  return password_verify($pw, trim((string)@file_get_contents($f)));
+}
+
 // opportunistic GC of expired token files
 function cab_tokens_gc(){
   foreach(glob(cab_tokens_dir().'/*') as $f){
@@ -130,6 +144,9 @@ function cab_require_login(){
 // session anchors only the LOGIN server_id; email is resolved LIVE from its request each time.
 function cab_login_server_id(){ return (string)($_SESSION['owner']['server_id']??''); }
 function cab_owner_email(){
+  // password-session: email is the anchor
+  if(!empty($_SESSION['owner']['email'])) return strtolower(trim($_SESSION['owner']['email']));
+  // magic-link session: resolve live from the login server's request
   $sid=cab_login_server_id();
   foreach(cab_list('custom_cc_requests') as $r){
     if((string)($r['custom_server_id']??'')===$sid) return trim($r['custom_contact_email']??'');

@@ -5,6 +5,13 @@ $servers=cab_owner_servers();
 $email=cab_owner_email();
 $need_email=($email==='');
 echo cab_page('Личный кабинет');
+$notice = ($_GET['ok']??'')==='pw' ? ['ok','Пароль сохранён. Теперь можно входить по email и паролю.']
+        : (($_GET['err']??'')==='pwshort' ? ['err','Пароль слишком короткий (минимум 6 символов).']
+        : (($_GET['err']??'')==='email' ? ['err','Сначала укажите email.'] : null));
+if($notice){
+  $bg = $notice[0]==='ok' ? 'background:#e7f7ec;color:#15803d' : 'background:#fde8e8;color:#b91c1c';
+  echo '<div style="'.$bg.';padding:9px 12px;border-radius:8px;margin:10px 0">'.cab_h($notice[1]).'</div>';
+}
 if($need_email){
   echo '<div class="card"><p style="margin:0 0 8px">Укажите email — он нужен для чеков и управления подпиской:</p>'
      .'<form method=post action="set-email.php"><input name=email type=email required placeholder="you@mail.ru" '
@@ -50,6 +57,19 @@ foreach($servers as $s){
     echo '<button class="btn off" disabled title="Нет привязанной карты">Отвязать карту · отключить автосписание</button>';
   }
   echo '</div>';
+  echo '</div>';
+}
+// --- security: email + password for site login ---
+if($email!==''){
+  $hasPw=cab_pw_exists($email);
+  echo '<div class="card">';
+  echo '<div style="font-weight:600;margin-bottom:6px">Вход на сайт по паролю</div>';
+  echo '<div class="muted" style="margin-bottom:10px">Email: <b>'.cab_h($email).'</b> · пароль '.($hasPw?'задан':'не задан').'. '
+     .'Пароль позволяет входить в кабинет с сайта без ссылки из бота.</div>';
+  echo '<form method=post action="set-password.php">'
+     .'<input name=password type=password required minlength=6 placeholder="'.($hasPw?'Новый пароль':'Задать пароль').' (мин. 6)" '
+     .'style="padding:9px;border:1px solid #ccc;border-radius:8px;width:60%"> '
+     .'<button class="btn">'.($hasPw?'Изменить пароль':'Задать пароль').'</button></form>';
   echo '</div>';
 }
 echo cab_page_end();
