@@ -47,30 +47,35 @@ function cab_list($cat){
 function cab_get($cat,$id){ [$c,$j]=cab_korfix('GET',"/$cat/$id/"); return $j['data']??null; }
 function cab_update($cat,$id,$fields){ return cab_korfix('POST',"/$cat/$id/",$fields); }
 
-// --- one-time login tokens (SQLite, outside webroot) ---
-function cab_db(){
-  static $db=null;
-  if($db===null){
-    $cfg=cab_cfg();
-    $db=new PDO('sqlite:'.$cfg['tokens_db']);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec("CREATE TABLE IF NOT EXISTS tokens(token TEXT PRIMARY KEY, email TEXT, server_id TEXT, expires INTEGER, used INTEGER DEFAULT 0)");
-  }
-  return $db;
+// --- one-time login tokens (flat files, outside webroot; no DB extension needed) ---
+// consume = read + unlink (atomic one-time). token is hex (path-safe).
+function cab_tokens_dir(){
+  $cfg=cab_cfg(); $d=$cfg['tokens_dir'];
+  if(!is_dir($d)) @mkdir($d,0700,true);
+  return rtrim($d,'/');
 }
 function cab_token_create($email,$server_id,$ttl){
   $t=cab_make_token_value();
-  $st=cab_db()->prepare("INSERT INTO tokens(token,email,server_id,expires,used) VALUES(?,?,?,?,0)");
-  $st->execute([$t,$email,$server_id,time()+$ttl]);
+  $data=json_encode(['email'=>$email,'server_id'=>$server_id,'expires'=>time()+$ttl]);
+  file_put_contents(cab_tokens_dir().'/'.$t, $data, LOCK_EX);
   return $t;
 }
 function cab_token_consume($t){
-  $db=cab_db();
-  $st=$db->prepare("SELECT * FROM tokens WHERE token=?"); $st->execute([$t]);
-  $r=$st->fetch(PDO::FETCH_ASSOC);
-  if(!$r || $r['used'] || $r['expires']<time()) return null;
-  $db->prepare("UPDATE tokens SET used=1 WHERE token=?")->execute([$t]);
+  if(!preg_match('/^[a-f0-9]{16,}$/',$t)) return null;
+  $f=cab_tokens_dir().'/'.$t;
+  if(!is_file($f)) return null;
+  $raw=@file_get_contents($f);
+  @unlink($f); // one-time: gone after first read
+  $r=json_decode($raw,true);
+  if(!is_array($r) || ($r['expires']??0) < time()) return null;
   return $r;
+}
+// opportunistic GC of expired token files
+function cab_tokens_gc(){
+  foreach(glob(cab_tokens_dir().'/*') as $f){
+    $r=json_decode(@file_get_contents($f),true);
+    if(!is_array($r) || ($r['expires']??0) < time()) @unlink($f);
+  }
 }
 
 // --- session ---
