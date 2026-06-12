@@ -14,12 +14,25 @@ if(!$servers){ echo '<p class="muted">Инстансы не найдены дл�
 foreach($servers as $s){
   $exp=$s['custom_expires_at']??'';
   $days = $exp ? (int)floor((strtotime($exp)-time())/86400) : null;
-  $total=cab_total($s['custom_price_server']??0,$s['custom_price_subscription']??0,$s['custom_discount']??'');
+  $ps=(int)($s['custom_price_server']??0);
+  $sub=(int)($s['custom_price_subscription']??0);
+  $disc=(int)($s['custom_discount']??0); if($disc<0)$disc=0; if($disc>100)$disc=100;
+  $base=$ps+$sub;
+  $total=cab_total($ps,$sub,$disc);
+  $saved=$base-$total;
+  $comment=trim($s['custom_payment_comment']??'');
   $hasCard=!empty($s['custom_payment_method_id']);
   echo '<div class="card">';
   echo '<div style="font-weight:600;font-size:16px">'.cab_h($s['custom_name']??'?').' <span class="muted" style="font-weight:400">'.cab_h($s['custom_host']??'').'</span></div>';
   echo '<div style="margin:8px 0;color:#333">Действует до: <b>'.cab_h($exp?substr($exp,0,10):'—').'</b>'.($days!==null?' <span class="muted">('.$days.' дн.)</span>':'').'</div>';
-  echo '<div style="margin:8px 0;color:#333">Сумма продления: <b>'.$total.' ₽</b></div>';
+  // --- price breakdown from cc_servers ---
+  echo '<table style="border-collapse:collapse;margin:8px 0;color:#333;font-size:14px">';
+  echo '<tr><td style="padding:2px 14px 2px 0">Аренда сервера</td><td style="text-align:right">'.$ps.' ₽</td></tr>';
+  echo '<tr><td style="padding:2px 14px 2px 0">Подписка (LLM)</td><td style="text-align:right">'.$sub.' ₽</td></tr>';
+  if($disc>0) echo '<tr><td style="padding:2px 14px 2px 0">Скидка</td><td style="text-align:right;color:#16a34a">'.$disc.'% (−'.$saved.' ₽)</td></tr>';
+  echo '<tr><td style="padding:6px 14px 2px 0;border-top:1px solid #eef0f3;font-weight:600">Итого к оплате</td><td style="text-align:right;border-top:1px solid #eef0f3;font-weight:600">'.$total.' ₽</td></tr>';
+  echo '</table>';
+  if($comment!=='') echo '<div class="muted" style="margin:4px 0 8px">💬 '.cab_h($comment).'</div>';
   echo '<form method=post action="pay.php" style="margin:6px 0"><input type=hidden name=server_id value="'.cab_h($s['id']).'"><button class="btn">Оплатить / продлить</button></form>';
 
   // --- payment method / autopay block (ALWAYS shown) ---
