@@ -6,7 +6,7 @@ $t=$_GET['t']??'';
 if($t!==''){
   $row=cab_token_consume($t);
   if($row){
-    $_SESSION['owner']=['email'=>$row['email']?:'','server_id'=>$row['server_id']];
+    $_SESSION['owner']=['server_id'=>$row['server_id']];  // email resolved live from request
     $_SESSION['ts']=time();
     header('Location: /cabinet/'); exit;
   }

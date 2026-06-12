@@ -71,10 +71,13 @@ function cab_korfix($method,$path,$form=null){
   return [$code, json_decode($body,true)];
 }
 function cab_list($cat){
+  static $cache=[];
+  if(isset($cache[$cat])) return $cache[$cat];
   [$c,$j]=cab_korfix('GET',"/$cat/?limit=200");
   $d=$j['data']??[];
-  if(is_array($d) && array_key_exists(0,$d)) return $d;     // list
-  return $d ? [$d] : [];                                     // single or empty
+  $out = (is_array($d) && array_key_exists(0,$d)) ? $d : ($d ? [$d] : []);
+  $cache[$cat]=$out;
+  return $out;
 }
 function cab_get($cat,$id){ [$c,$j]=cab_korfix('GET',"/$cat/$id/"); return $j['data']??null; }
 function cab_update($cat,$id,$fields){ return cab_korfix('POST',"/$cat/$id/",$fields); }
@@ -124,9 +127,19 @@ function cab_require_login(){
   }
   $_SESSION['ts']=time();
 }
-// owner = ['email'=>?, 'server_id'=>?]; returns owner's servers with _req attached
+// session anchors only the LOGIN server_id; email is resolved LIVE from its request each time.
+function cab_login_server_id(){ return (string)($_SESSION['owner']['server_id']??''); }
+function cab_owner_email(){
+  $sid=cab_login_server_id();
+  foreach(cab_list('custom_cc_requests') as $r){
+    if((string)($r['custom_server_id']??'')===$sid) return trim($r['custom_contact_email']??'');
+  }
+  return '';
+}
+// returns owner's servers with _req attached: the login server + any server sharing the same contact email
 function cab_owner_servers(){
-  $o=$_SESSION['owner'];
+  $sid=cab_login_server_id();
+  $email=cab_owner_email();
   $servers=cab_list('custom_cc_servers');
   $reqs=cab_list('custom_cc_requests');
   $byServer=[];
@@ -134,9 +147,8 @@ function cab_owner_servers(){
   $out=[];
   foreach($servers as $s){
     $req=$byServer[(string)$s['id']]??[];
-    $email=$req['custom_contact_email']??'';
-    $match = (!empty($o['email']) && $email===$o['email'])
-          || (!empty($o['server_id']) && (string)$s['id']===(string)$o['server_id']);
+    $em=trim($req['custom_contact_email']??'');
+    $match = ((string)$s['id']===$sid) || ($email!=='' && $em===$email);
     if($match){ $s['_req']=$req; $out[]=$s; }
   }
   return $out;

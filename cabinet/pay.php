@@ -7,7 +7,7 @@ $sid=$_POST['server_id']??'';
 $srv=null;
 foreach(cab_owner_servers() as $s){ if((string)$s['id']===(string)$sid){ $srv=$s; break; } }
 if(!$srv){ http_response_code(403); echo 'forbidden'; exit; }
-$email=$_SESSION['owner']['email']?:'';
+$email=cab_owner_email();
 if(!cab_valid_email($email)){ header('Location: /cabinet/?err=email'); exit; }
 $total=cab_total($srv['custom_price_server']??0,$srv['custom_price_subscription']??0,$srv['custom_discount']??'');
 $val=number_format($total,2,'.','');

@@ -2,7 +2,7 @@
 require __DIR__.'/lib.php';
 cab_require_login();
 $servers=cab_owner_servers();
-$email=$_SESSION['owner']['email']??'';
+$email=cab_owner_email();
 $need_email=($email==='');
 echo cab_page('Личный кабинет');
 if($need_email){
