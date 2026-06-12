@@ -1,0 +1,3 @@
+# never commit real secrets / runtime data
+../cabinet-config.php
+../cabinet-tokens.sqlite
