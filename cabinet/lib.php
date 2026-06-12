@@ -44,7 +44,7 @@ function cab_page($title='Личный кабинет'){
     .'.muted{color:#8a93a0;font-size:13px}'
     .'.cab-ft{max-width:720px;margin:8px auto 28px;padding:0 24px;color:#94a3b8;font-size:13px}'
     .'</style></head><body>'
-    .'<div class="cab-hd"><span class="lg">ai<b>claw</b></span><span class="sub">'.$t.'</span></div>'
+    .'<div class="cab-hd"><a href="/" class="lg" style="color:#fff;text-decoration:none">ai<b>claw</b></a><span class="sub">'.$t.'</span></div>'
     .'<div class="cab-wrap">';
 }
 function cab_page_end($links=true){
