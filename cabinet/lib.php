@@ -5,7 +5,7 @@
 function cab_cfg(){
   static $c=null;
   if($c===null){
-    $p = getenv('CABINET_CONFIG') ?: '/home/korfix/web/aiclaw.korfix.app/cabinet-config.php';
+    $p = getenv('CABINET_CONFIG') ?: '/home/korfix/web/aiclaw.korfix.app/private/cabinet-config.php';
     $c = require $p;
   }
   return $c;
