@@ -24,6 +24,38 @@ function cab_make_token_value(){ return bin2hex(random_bytes(24)); }
 
 function cab_h($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
+// --- branded page chrome (shared header/footer for all cabinet pages) ---
+function cab_page($title='Личный кабинет'){
+  $t=cab_h($title);
+  return '<!doctype html><html lang=ru><head><meta charset=utf-8>'
+    .'<meta name=viewport content="width=device-width,initial-scale=1"><title>aiclaw — '.$t.'</title>'
+    .'<style>'
+    .'body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;color:#1a1a1a;background:#f6f7f9}'
+    .'.cab-hd{background:#0f172a;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}'
+    .'.cab-hd .lg{font-size:19px;font-weight:700;letter-spacing:.3px}'
+    .'.cab-hd .lg b{color:#60a5fa}.cab-hd .sub{color:#94a3b8;font-size:13px;margin-left:auto}'
+    .'.cab-wrap{max-width:720px;margin:0 auto;padding:24px}'
+    .'.card{border:1px solid #e6e8ec;border-radius:12px;padding:16px;margin:12px 0;background:#fff}'
+    .'a{color:#2563eb}button{font:inherit;cursor:pointer}'
+    .'.btn{padding:9px 16px;border:0;border-radius:8px;background:#2563eb;color:#fff}'
+    .'.btn.sec{background:#fff;color:#d33;border:1px solid #d33}'
+    .'.btn.off{background:#eef1f5;color:#9aa3af;border:1px solid #e1e5ea;cursor:not-allowed}'
+    .'.muted{color:#8a93a0;font-size:13px}'
+    .'.cab-ft{max-width:720px;margin:8px auto 28px;padding:0 24px;color:#94a3b8;font-size:13px}'
+    .'</style></head><body>'
+    .'<div class="cab-hd"><span class="lg">ai<b>claw</b></span><span class="sub">'.$t.'</span></div>'
+    .'<div class="cab-wrap">';
+}
+function cab_page_end($links=true){
+  $f = $links
+    ? '<div class="cab-ft"><a href="/cabinet/autopay.php">Условия автоплатежа</a> · '
+      .'<a href="/oferta.php">Оферта</a> · <a href="/privacy.php">Конфиденциальность</a> · '
+      .'<a href="/refund.php">Возврат</a> · <a href="/contacts.php">Контакты</a> · '
+      .'<a href="/cabinet/logout.php">Выйти</a></div>'
+    : '';
+  return '</div>'.$f.'</body></html>';
+}
+
 // --- Korfix DB API (Bearer) ---
 function cab_korfix($method,$path,$form=null){
   $cfg=cab_cfg();
