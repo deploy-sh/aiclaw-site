@@ -54,9 +54,9 @@ function cab_tokens_dir(){
   if(!is_dir($d)) @mkdir($d,0700,true);
   return rtrim($d,'/');
 }
-function cab_token_create($email,$server_id,$ttl){
+function cab_token_create($email,$server_id,$ttl,$reuse=false){
   $t=cab_make_token_value();
-  $data=json_encode(['email'=>$email,'server_id'=>$server_id,'expires'=>time()+$ttl]);
+  $data=json_encode(['email'=>$email,'server_id'=>$server_id,'expires'=>time()+$ttl,'reuse'=>$reuse?1:0]);
   file_put_contents(cab_tokens_dir().'/'.$t, $data, LOCK_EX);
   return $t;
 }
@@ -65,9 +65,9 @@ function cab_token_consume($t){
   $f=cab_tokens_dir().'/'.$t;
   if(!is_file($f)) return null;
   $raw=@file_get_contents($f);
-  @unlink($f); // one-time: gone after first read
   $r=json_decode($raw,true);
-  if(!is_array($r) || ($r['expires']??0) < time()) return null;
+  if(!is_array($r) || ($r['expires']??0) < time()){ @unlink($f); return null; }
+  if(empty($r['reuse'])) @unlink($f);  // one-time links consumed; reusable links kept until expiry
   return $r;
 }
 // opportunistic GC of expired token files

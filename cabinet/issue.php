@@ -13,5 +13,8 @@ foreach(cab_list('custom_cc_servers') as $s){ if(($s['custom_key']??'')===$key){
 if(!$srv){ http_response_code(404); echo json_encode(['ok'=>false,'error'=>'server not found']); exit; }
 $email='';
 foreach(cab_list('custom_cc_requests') as $r){ if((string)($r['custom_server_id']??'')===(string)$srv['id']){ $email=$r['custom_contact_email']??''; break; } }
-$t=cab_token_create($email,$srv['id'],$cfg['token_ttl']);
+// optional longer-lived, reusable link for embedding in billing messages
+$reuse = !empty($in['reuse']);
+$ttl = isset($in['ttl']) ? max(60, min((int)$in['ttl'], 2592000)) : $cfg['token_ttl']; // cap 30d
+$t=cab_token_create($email,$srv['id'],$ttl,$reuse);
 echo json_encode(['ok'=>true,'url'=>$cfg['base_url'].'/cabinet/login.php?t='.$t]);
