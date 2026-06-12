@@ -29,6 +29,7 @@ function cab_page($title='Личный кабинет'){
   $t=cab_h($title);
   return '<!doctype html><html lang=ru><head><meta charset=utf-8>'
     .'<meta name=viewport content="width=device-width,initial-scale=1"><title>aiclaw — '.$t.'</title>'
+    .'<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="alternate icon" href="/favicon.ico">'
     .'<style>'
     .'body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;color:#1a1a1a;background:#f6f7f9}'
     .'.cab-hd{background:#0f172a;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}'
