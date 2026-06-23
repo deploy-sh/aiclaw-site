@@ -10,6 +10,12 @@ if($t!==''){
   if($row){
     $_SESSION['owner']=['server_id'=>$row['server_id']];  // email resolved live
     $_SESSION['ts']=time();
+    // baked "счёт" intent → open the invoice straight away
+    if(!empty($row['x']['goto']) && $row['x']['goto']==='schet'){
+      $_SESSION['schet_intent']=$row['x'];
+      header('Location: /cabinet/schet.php'); exit;
+    }
+    unset($_SESSION['schet_intent']);
     header('Location: /cabinet/'); exit;
   }
 }

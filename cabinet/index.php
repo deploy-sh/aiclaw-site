@@ -42,6 +42,21 @@ foreach($servers as $s){
   if($comment!=='') echo '<div class="muted" style="margin:4px 0 8px">💬 '.cab_h($comment).'</div>';
   echo '<form method=post action="pay.php" style="margin:6px 0"><input type=hidden name=server_id value="'.cab_h($s['id']).'"><button class="btn">Оплатить / продлить</button></form>';
 
+  // --- счёт на оплату (PDF) ---
+  $monthly=cab_monthly($s);
+  echo '<div style="border-top:1px solid #eef0f3;margin-top:12px;padding-top:12px">';
+  echo '<div style="font-weight:600;margin-bottom:6px">Счёт на оплату (PDF)</div>';
+  echo '<div class="muted" style="margin-bottom:8px">Для оплаты по реквизитам от '.cab_h(cab_cfg()['legal']['name']??'').'. Выберите период:</div>';
+  echo '<form method=get action="schet.php" target=_blank style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">';
+  echo '<input type=hidden name=server_id value="'.cab_h($s['id']).'">';
+  echo '<select name=months onchange="this.form.querySelector(\'.schet-sum\').textContent=(this.value*'.$monthly.')+\' ₽\'" style="padding:8px;border:1px solid #ccc;border-radius:8px">';
+  foreach(cab_schet_months() as $m){ echo '<option value="'.$m.'">'.$m.' мес.</option>'; }
+  echo '</select>';
+  echo '<span class="schet-sum" style="font-weight:600">'.$monthly.' ₽</span>';
+  echo '<button class="btn">Открыть счёт</button>';
+  echo '</form>';
+  echo '</div>';
+
   // --- payment method / autopay block (ALWAYS shown) ---
   echo '<div style="border-top:1px solid #eef0f3;margin-top:12px;padding-top:12px">';
   echo '<div style="font-weight:600;margin-bottom:6px">Способ оплаты и автосписание</div>';

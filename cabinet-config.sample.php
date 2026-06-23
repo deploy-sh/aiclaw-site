@@ -14,12 +14,22 @@ return [
   'session_ttl'  => 1800,   // idle session TTL, seconds (30 min)
   'base_url'     => 'https://aiclaw.korfix.app',
   'brand'        => 'aiclaw',
+  'vat_default'  => 0,     // НДС по умолчанию (0 = Без НДС). Если поменяется — НДС начислением (сверху).
   'legal' => [
     'name'    => 'ООО «Платформа СтаффХаб»',  // TODO: rename pending — edit here only
-    'inn'     => 'TBD',
-    'ogrn'    => 'TBD',
-    'address' => 'TBD',
+    'inn'     => '5260498299',
+    'kpp'     => '526001001',
+    'ogrn'    => '1245200033286',
+    'okpo'    => '73034946',
+    'address' => '603000, г. Нижний Новгород, ул. Пискунова, д. 29, помещ. П33',
     'phone'   => 'TBD',
     'email'   => 'billing@korfix.app',
+    'director'=> 'Лядков Андрей Дмитриевич',
+  ],
+  'bank' => [
+    'name' => 'Волго-Вятский Банк ПАО СБЕРБАНК',
+    'bik'  => '042202603',
+    'rs'   => '40702810542000112217',
+    'ks'   => '30101810900000000603',
   ],
 ];

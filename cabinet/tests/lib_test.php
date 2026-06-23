@@ -22,4 +22,25 @@ ok(cab_make_token_value() !== $t, 'tokens differ');
 // html escape
 ok(cab_h('<b>')==='&lt;b&gt;', 'html escape');
 
+// --- schet helpers ---
+// VAT начислением (on top)
+ok(cab_nds_calc(4000,0)===[4000,0,0,4000], 'vat 0 -> no nds');
+ok(cab_nds_calc(1000,20)===[1000,20,200,1200], 'vat 20% on top');
+ok(cab_nds_calc(0,0)===[1,0,0,1], 'net floor 1');
+
+// invoice number
+ok(cab_schet_no(3,'20260623')==='AIC-3-20260623', 'schet no format');
+ok(cab_schet_no('s2-demo','20260101')==='AIC-s2demo-20260101', 'schet no sanitized');
+
+// amount in words
+ok(cab_amount_words(4000)==='Четыре тысячи рублей 00 копеек', 'words 4000: '.cab_amount_words(4000));
+ok(cab_amount_words(1)==='Один рубль 00 копеек', 'words 1: '.cab_amount_words(1));
+ok(cab_amount_words(2500)==='Две тысячи пятьсот рублей 00 копеек', 'words 2500: '.cab_amount_words(2500));
+ok(cab_amount_words(21)==='Двадцать один рубль 00 копеек', 'words 21: '.cab_amount_words(21));
+ok(cab_amount_words(0)==='Ноль рублей 00 копеек', 'words 0: '.cab_amount_words(0));
+ok(cab_amount_words(1234567)==='Один миллион двести тридцать четыре тысячи пятьсот шестьдесят семь рублей 00 копеек', 'words 1234567: '.cab_amount_words(1234567));
+
+// month presets
+ok(cab_schet_months()===[1,3,6,12], 'month presets');
+
 echo "ALL OK\n";
