@@ -43,7 +43,12 @@ function cab_page($title='Личный кабинет'){
     .'.btn.off{background:#eef1f5;color:#9aa3af;border:1px solid #e1e5ea;cursor:not-allowed}'
     .'.muted{color:#8a93a0;font-size:13px}'
     .'.cab-ft{max-width:720px;margin:8px auto 28px;padding:0 24px;color:#94a3b8;font-size:13px}'
-    .'</style></head><body>'
+    .'</style>'
+    .'<script>'
+    .'function cabHistToggle(id){var b=document.getElementById("hist-"+id),a=document.getElementById("histarrow-"+id);if(!b)return;var open=b.style.display==="none";b.style.display=open?"block":"none";if(a)a.textContent=open?"▾":"▸";}'
+    .'function cabHistMore(id){var hid=document.querySelectorAll("#hist-"+id+" tr.hx-hidden");for(var i=0;i<10&&i<hid.length;i++){hid[i].classList.remove("hx-hidden");hid[i].style.display="";}var rem=document.querySelectorAll("#hist-"+id+" tr.hx-hidden").length;var btn=document.getElementById("histmore-"+id);if(btn){if(rem===0){btn.style.display="none";}else{btn.textContent="Показать ещё "+Math.min(10,rem)+" из "+rem;}}}'
+    .'</script>'
+    .'</head><body>'
     .'<div class="cab-hd"><a href="/" class="lg" style="color:#fff;text-decoration:none">ai<b>claw</b></a><span class="sub">'.$t.'</span></div>'
     .'<div class="cab-wrap">';
 }
@@ -347,4 +352,130 @@ function cab_pdf_from_html($html){
   $pdf = is_file($outPdf) ? file_get_contents($outPdf) : '';
   @unlink($inHtml); @unlink($outPdf);
   return ($rc===0 && strlen($pdf)>500) ? $pdf : null;
+}
+
+// =====================================================================
+// Payment history (YooKassa source of truth — incl. failed/canceled attempts)
+// =====================================================================
+
+// Map a YooKassa status to a RU label + badge color.
+function cab_yk_status($st){
+  switch($st){
+    case 'succeeded':           return ['✅ Оплачено',        '#15803d', '#e7f7ec'];
+    case 'canceled':            return ['❌ Не завершено',     '#b91c1c', '#fde8e8'];
+    case 'pending':             return ['⏳ Ожидает оплаты',  '#92600a', '#fff3df'];
+    case 'waiting_for_capture': return ['⏳ В обработке',      '#92600a', '#fff3df'];
+    default:                    return [cab_h($st),           '#475569', '#eef1f5'];
+  }
+}
+
+// Fetch payment attempts for a server from YooKassa, filtered by metadata.server_id.
+// Returns list (newest first) of [id,date,amount,status,description,advanced].
+// `advanced` = succeeded AND carried metadata.server_id (i.e. it actually extended the sub).
+// On any API error returns null (caller shows a graceful fallback).
+function cab_yk_payments($server_id,$months=12,$max_pages=12){
+  $cfg=cab_cfg();
+  if(empty($cfg['yk_shop'])||empty($cfg['yk_key'])) return null;
+  $sid=(string)$server_id;
+  $since=gmdate('Y-m-d\TH:i:s.000\Z', time()-$months*30*86400);
+  $out=[]; $cursor=null; $pages=0;
+  do{
+    $q=['limit'=>100,'created_at.gte'=>$since];
+    if($cursor) $q['cursor']=$cursor;
+    $url='https://api.yookassa.ru/v3/payments?'.http_build_query($q);
+    $ch=curl_init($url);
+    curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_TIMEOUT=>20,
+      CURLOPT_USERPWD=>$cfg['yk_shop'].':'.$cfg['yk_key'],
+      CURLOPT_HTTPHEADER=>['Content-Type: application/json']]);
+    $r=curl_exec($ch); $code=curl_getinfo($ch,CURLINFO_HTTP_CODE); curl_close($ch);
+    if($code>=400 || $r===false) return ($pages===0)? null : $out; // hard fail on first page only
+    $j=json_decode($r,true);
+    foreach(($j['items']??[]) as $it){
+      $mid=(string)($it['metadata']['server_id']??$it['metadata']['sub_id']??'');
+      if($mid!==$sid) continue;
+      $st=$it['status']??'';
+      $out[]=[
+        'id'=>$it['id']??'',
+        'date'=>$it['created_at']??'',
+        'amount'=>$it['amount']['value']??'',
+        'status'=>$st,
+        'description'=>$it['description']??'',
+        'advanced'=>($st==='succeeded' && $mid!==''),
+      ];
+    }
+    $cursor=$j['next_cursor']??null; $pages++;
+  } while($cursor && $pages<$max_pages);
+  usort($out,function($a,$b){ return strcmp($b['date'],$a['date']); });
+  return $out;
+}
+
+// Manually-attributed server-less payments: cc_charges rows whose custom_request_id == this
+// server's request AND whose name carries the UNMATCHED marker (server-less payment we matched by hand).
+// These never have YooKassa metadata, so they don't duplicate the YooKassa list.
+function cab_manual_charges($request_id){
+  $out=[];
+  if($request_id==='') return $out;
+  foreach(cab_list('custom_cc_charges') as $c){
+    if((string)($c['custom_request_id']??'')!==(string)$request_id) continue;
+    $nm=$c['name']??'';
+    if(strpos($nm,'UNMATCHED')===false) continue;
+    $desc=preg_replace('/^.*?UNMATCHED\s*\[[^\]]*\]:\s*/u','',$nm);
+    $desc=preg_replace('/\s*\|\s*pid=.*$/u','',$desc);
+    $out[]=['id'=>'','date'=>($c['custom_created_at']??''),'amount'=>($c['custom_amount']??''),
+            'status'=>'succeeded','description'=>$desc,'advanced'=>false,'manual'=>true];
+  }
+  return $out;
+}
+
+// Render the payment-history block (HTML) for one server. Collapsible + paginated (10/page).
+// $srv = server row (from cab_owner_servers, carries '_req'). Merges YooKassa attempts +
+// manually-attributed server-less payments (cc_charges).
+function cab_render_history($srv){
+  $sid=(string)($srv['id']??'');
+  $reqId=(string)($srv['_req']['id']??'');
+  $yk=cab_yk_payments($sid);
+  $ykFailed=($yk===null);
+  $rows=is_array($yk)?$yk:[];
+  foreach(cab_manual_charges($reqId) as $m){ $rows[]=$m; }
+  usort($rows,function($a,$b){ return strcmp(($b['date']??''),($a['date']??'')); });
+  $cnt=count($rows);
+
+  $h ='<div style="border-top:1px solid #eef0f3;margin-top:12px;padding-top:12px">';
+  $h.='<div onclick="cabHistToggle(\''.cab_h($sid).'\')" style="font-weight:600;cursor:pointer;user-select:none">'
+    .'<span id="histarrow-'.cab_h($sid).'">▸</span> История платежей'
+    .($cnt?' <span class="muted" style="font-weight:400">('.$cnt.')</span>':'').'</div>';
+  $h.='<div id="hist-'.cab_h($sid).'" style="display:none;margin-top:8px">';
+  if($ykFailed && !$rows){
+    $h.='<div class="muted">История временно недоступна. Попробуйте обновить страницу позже.</div>';
+  } elseif(!$rows){
+    $h.='<div class="muted">Платежей пока нет.</div>';
+  } else {
+    if($ykFailed) $h.='<div class="muted" style="margin-bottom:6px">⚠️ Данные YooKassa временно недоступны, показаны только ручные сверки.</div>';
+    $h.='<table style="border-collapse:collapse;width:100%;font-size:13px">';
+    $i=0;
+    foreach($rows as $r){
+      $hide=$i>=10;
+      if(!empty($r['manual'])){ $lbl='🔧 Зачтено вручную'; $fg='#475569'; $bg='#eef1f5'; }
+      else { [$lbl,$fg,$bg]=cab_yk_status($r['status']); }
+      $d=!empty($r['date'])?date('d.m.Y', strtotime($r['date'])):'—';
+      $amt=($r['amount']!==''&&$r['amount']!==null)?cab_h(rtrim(rtrim((string)$r['amount'],'0'),'.')).' ₽':'—';
+      $note=!empty($r['advanced'])?' <span class="muted" style="font-size:11px">· продлило подписку</span>':'';
+      $h.='<tr'.($hide?' class="hx-hidden"':'').' style="'.($hide?'display:none;':'').'border-top:1px solid #f1f3f6">';
+      $h.='<td style="padding:6px 8px 6px 0;white-space:nowrap;color:#475569">'.$d.'</td>';
+      $h.='<td style="padding:6px 8px;white-space:nowrap;font-weight:600">'.$amt.'</td>';
+      $h.='<td style="padding:6px 8px"><span style="background:'.$bg.';color:'.$fg.';padding:2px 8px;border-radius:999px;white-space:nowrap">'.cab_h($lbl).'</span>'.$note.'</td>';
+      $h.='<td style="padding:6px 0 6px 8px;color:#64748b">'.cab_h($r['description']).'</td>';
+      $h.='</tr>';
+      $i++;
+    }
+    $h.='</table>';
+    if($cnt>10){
+      $rem=$cnt-10;
+      $h.='<button type=button id="histmore-'.cab_h($sid).'" onclick="cabHistMore(\''.cab_h($sid).'\')" class="btn sec" '
+        .'style="margin-top:8px;font-size:13px;padding:6px 12px">Показать ещё '.min(10,$rem).' из '.$rem.'</button>';
+    }
+    $h.='<div class="muted" style="margin-top:8px;font-size:11px">Источник: YooKassa (попытки за 12 мес) + ручные сверки.</div>';
+  }
+  $h.='</div></div>';
+  return $h;
 }

@@ -57,6 +57,9 @@ foreach($servers as $s){
   echo '</form>';
   echo '</div>';
 
+  // --- payment history (YooKassa + manual server-less matches), collapsible + paginated ---
+  echo cab_render_history($s);
+
   // --- payment method / autopay block (ALWAYS shown) ---
   echo '<div style="border-top:1px solid #eef0f3;margin-top:12px;padding-top:12px">';
   echo '<div style="font-weight:600;margin-bottom:6px">Способ оплаты и автосписание</div>';
